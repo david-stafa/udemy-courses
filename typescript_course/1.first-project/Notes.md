@@ -3,7 +3,7 @@
 ## Compilation
 
 Watch Mode
-- tsc.app.ts --watch **/** tsc.app.ts -w
+- tsc.app.ts --watch **/** tsc.app.ts -w / tsc -w
 - it reacts to our changes
 - good for ane file
 
