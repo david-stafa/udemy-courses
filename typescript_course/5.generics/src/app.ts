@@ -1,4 +1,5 @@
 // *** Generics *** \\
+// provides flexibility combines with type safety
 
 // const names: Array<string> = ["David", "Max"]; // string[]
 
@@ -14,13 +15,16 @@ const merge = <T extends object, U extends object>(objA: T, objB: U): T & U => {
   return { ...objA, ...objB };
 };
 
-const mergeObj = merge({ name: "David", hobbies: ["sport", "games"] }, {age: '30'});
+const mergeObj = merge(
+  { name: "David", hobbies: ["sport", "games"] },
+  { age: "30" }
+);
 console.log(mergeObj);
 
 //Conmstrains - extends object
 
 interface Lengthy {
-    length: number
+  length: number;
 }
 
 const countAndDescribe = <T extends Lengthy>(element: T): [T, string] => {
@@ -34,18 +38,82 @@ const countAndDescribe = <T extends Lengthy>(element: T): [T, string] => {
   return [element, descriptionText];
 };
 
-console.log(countAndDescribe('Hi, there!'))
+console.log(countAndDescribe("Hi, there!"));
 
 // KeyOf
 
-const extractAndConvert = <T extends object, U extends keyof T>(obj: T, key: U) => {
-    return 'Value: ' + obj[key]
-}
+const extractAndConvert = <T extends object, U extends keyof T>(
+  obj: T,
+  key: U
+) => {
+  return "Value: " + obj[key];
+};
 
-console.log(extractAndConvert({name: 'David'}, 'name'))
+console.log(extractAndConvert({ name: "David" }, "name"));
 
 const object = {
-    name:"David",
+  name: "David",
+};
+
+console.log(object["name"]);
+
+// *** Generics classes *** \\
+
+class DataStorage<T extends string | number | boolean> {
+  private data: T[] = [];
+
+  removeItem(item: T) {
+    if (this.data.indexOf(item) === -1) {
+      return;
+    }
+    this.data.splice(this.data.indexOf(item), 1);
+  }
+
+  addItem(item: T) {
+    this.data.push(item);
+  }
+
+  getItems() {
+    return [...this.data];
+  }
 }
 
-console.log(object['name'])
+const textStorage = new DataStorage<string>();
+textStorage.addItem("David");
+textStorage.addItem("Ondra");
+textStorage.removeItem("David");
+console.log(textStorage.getItems());
+
+const numberStorage = new DataStorage<number>();
+numberStorage.addItem(10);
+
+// Does not work with objects
+// const objectStorage = new DataStorage<object>();
+// objectStorage.addItem({ name: "David" });
+// objectStorage.addItem({ name: "Max" });
+// // ...
+// objectStorage.removeItem({ name: "Max" });
+// console.log(objectStorage.getItems());
+
+// *** Generic Utility types *** \\
+
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+function createCourseGoal(
+  title: string,
+  description: string,
+  date: Date
+): CourseGoal {
+  let courseGoal: Partial<CourseGoal> = {};
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = date;
+  return courseGoal as CourseGoal;
+}
+
+const names: Readonly<string[]> = ['Max', 'Anna'];
+names.push('Manu')
